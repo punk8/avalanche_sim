@@ -1,4 +1,5 @@
 package com.punk.algorim;
 
-public class Config {
+public abstract class Config {
+
 }
