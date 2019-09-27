@@ -7,6 +7,7 @@ import com.punk.message.ReplyMessage;
 import com.punk.message.RequestMessage;
 import sun.misc.Request;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,14 +22,27 @@ public class Node {
 
     public int id;
 
+    public int netDlys[]; //与其她节点的网络延迟
+    public int netDlyToClis[]; //与客户端的延迟
+
+
+
     //map存放对应id节点发送的color
     public Map<Integer,Color> receiveMap = new HashMap<Integer, Color>();
 
-    public Node(int id,Config config){
-        this.config = config;
+    public Node(int id,int[] netDlys,int[] netDlyToClis){
         this.id = id;
-        color = Color.None;
+        this.netDlys = netDlys;
+        this.netDlyToClis = netDlyToClis;
+        this.color = Color.None;
+
     }
+
+//    public Node(int id,Config config){
+//        this.config = config;
+//        this.id = id;
+//        color = Color.None;
+//    }
 
     public void run(){
 
