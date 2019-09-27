@@ -70,7 +70,13 @@ public class Message {
         return "消息类型:"+typeName[type]+";发送者id:"
                 +sendID+";接收者id:"+receiveID+";消息接收时间戳:"+rcvtime+";";
     }
-    public Message copy(int rcvId, long rcvtime) {
-        return new Message(sendID, rcvId,this.color, rcvtime);
+    public Message copy(int rcvId, long rcvtime,int type) {
+        if(type == REPLY){
+            return new ReplyMessage(sendID, rcvId,this.color, rcvtime);
+        }else {
+
+            return new RequestMessage(sendID, rcvId,this.color, rcvtime);
+
+        }
     }
 }

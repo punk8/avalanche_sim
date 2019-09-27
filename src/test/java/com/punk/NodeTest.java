@@ -24,15 +24,18 @@ public class NodeTest {
 //        }
 
         Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, System.currentTimeMillis());
+        System.out.println(message.type);
         Network.sendMsgToKOthers(message,nodes[0].id,"send");
-//        while (!msgQue.isEmpty()){
-//            Message msg = msgQue.poll();
-//            switch (msg.type){
-//                case Message.REPLY:
-//
-//
-//            }
-//        }
-        System.out.println(msgQue);
+        while (!msgQue.isEmpty()){
+            Message msg = msgQue.poll();
+            switch(msg.type){
+                case Message.REPLY:
+                case Message.REQUEST:
+                    nodes[msg.receiveID].msgProcess(msg);
+                    break;
+            }
+
+
+        }
     }
 }

@@ -142,7 +142,7 @@ public class Network {
             Random r = new Random();
             int toID = r.nextInt(N);
             if(toID != id) {
-                Message m = msg.copy(toID, msg.rcvtime + netDlys[id][i]);
+                Message m = msg.copy(toID, msg.rcvtime + netDlys[id][i],msg.type);
                 sendMsg(m, tag);
             }
         }

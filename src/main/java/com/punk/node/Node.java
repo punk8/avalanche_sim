@@ -64,7 +64,7 @@ public class Node {
                 receiveRequest(msg);
                 break;
             case Message.REPLY:
-                receiveREPLY(msg);
+                receiveReply(msg);
                 break;
             default:
                 System.out.println("【Error】消息类型错误！");
@@ -88,7 +88,7 @@ public class Node {
         Network.sendMsg(replyMessage,sendTag);
     }
 
-    public void receiveREPLY(Message msg){
+    public void receiveReply(Message msg){
         if(msg == null)return;
         ReplyMessage replyMessage = (ReplyMessage)msg;
         long recTime = msg.rcvtime + netDlys[msg.sendID];
