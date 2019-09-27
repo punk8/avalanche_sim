@@ -3,8 +3,11 @@ package com.punk.network;
 
 import com.punk.Client;
 import com.punk.Utils;
+import com.punk.message.Message;
 import com.punk.node.Node;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 
 public class Network {
@@ -18,13 +21,18 @@ public class Network {
     public static final int BASEDLYBTWRPANDCLI = 10;		//节点与客户端之间的基础网络时延
     public static final int DLYRNGBTWRPANDCLI = 15;			//节点与客户端之间的网络时延扰动范围
 
+    //消息优先队列（按消息计划被处理的时间戳排序）
+    public static Queue<Message> msgQue = new PriorityQueue<>(Message.cmp);
+
+    //正在网络中传播的消息的总大小
+    public static long inFlyMsgLen = 0;
 
 
 
     //初始化节点间的网络延时以及客户端与节点的网络延时
-    public static int[][] netDlys = netDlyBtwRpInit(K);
+    public static int[][] netDlys = netDlyBtwRpInit(N);
 
-    public static int[][] netDlysToClis = netDlyBtwRpAndCliInit(K, 1);
+    public static int[][] netDlysToClis = netDlyBtwRpAndCliInit(N, 1);
 
     public static int[][] netDlysToNodes = Utils.flipMatrix(netDlysToClis);
 
@@ -89,14 +97,12 @@ public class Network {
 //		int ttt = 0;
         while(!msgQue.isEmpty()) {
             Message msg = msgQue.poll();
-            switch(msg.type) {
-                case Message.REPLY:
-                case Message.CLITIMEOUT:
-                    clis[Client.getCliArrayIndex(msg.rcvId)].msgProcess(msg);
-                    break;
-                default:
-                    reps[msg.rcvId].msgProcess(msg);
-            }
+//            switch(msg.type) {
+//                case Message.REPLY:
+//                default:
+//                    nodes[msg.receiveID].msgProcess(msg);
+//            }
+            nodes[msg.receiveID].msgProcess(msg);
             //如果还未达到稳定状态的request消息小于INFLIGHT，随机选择一个客户端发送请求消息
             if(requestNums - getStableRequestNum(clis) < INFLIGHT && requestNums < REQNUM) {
                 clis[rand.nextInt(CN)].sendRequest(msg.rcvtime);
@@ -120,6 +126,22 @@ public class Network {
         double tps = getStableRequestNum(clis)/(double)(timestamp/1000);
         System.out.println("【The end】消息平均确认时间为:"+totalTime/totalStableMsg
                 +"毫秒;消息吞吐量为:"+tps+"tps");
+    }
+
+
+    public static void sendMsg(Message msg, String tag) {
+        msg.print(tag);
+        msgQue.add(msg);
+        inFlyMsgLen += msg.len;
+    }
+
+    public static void sendMsgToKOthers(Message msg, int id, String tag) {
+        for(int i = 0; i < K; i++) {
+            if(i != id) {
+                Message m = msg.copy(i, msg.rcvtime + netDlys[id][i]);
+                sendMsg(m, tag);
+            }
+        }
     }
 
 }
