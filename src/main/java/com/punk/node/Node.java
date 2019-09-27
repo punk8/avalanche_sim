@@ -1,18 +1,14 @@
 package com.punk.node;
 
 import com.punk.algorim.Config;
-import com.punk.algorim.SlushConfig;
 import com.punk.message.Message;
 import com.punk.message.ReplyMessage;
 import com.punk.message.RequestMessage;
 import com.punk.network.Network;
-import sun.misc.Request;
-import sun.nio.ch.Net;
 
 import java.util.*;
 
-import static com.punk.message.Message.REQUEST;
-import static com.punk.network.Network.K;
+import static com.punk.network.Network.*;
 
 public class Node {
 
@@ -38,13 +34,17 @@ public class Node {
     //map存放对应id节点发送的color
     public Map<Integer,Color> receiveMap = new HashMap<Integer, Color>();
 
+    public int Round;
+
+
+
     public Node(int id,int[] netDlys,int[] netDlyToClis){
         this.id = id;
         this.netDlys = netDlys;
         this.netDlyToClis = netDlyToClis;
         this.color = Color.None;
         this.count = 0;
-
+        this.Round = 0;
     }
 
 //    public Node(int id,Config config){
@@ -93,9 +93,32 @@ public class Node {
         ReplyMessage replyMessage = (ReplyMessage)msg;
         long recTime = msg.rcvtime + netDlys[msg.sendID];
         this.count ++;
+        receiveMap.put(msg.sendID,msg.color);
         if(this.count == K){
+            Round ++;
+            Map<Color, Integer> res=new HashMap<>();
+            for (Map.Entry<Integer,Color> entry:receiveMap.entrySet()){
+                if (res.containsKey(entry.getValue())){
+                    res.put(entry.getValue(),res.get(entry.getValue())+1);
+                }else{
+                    res.put(entry.getValue(),1);
+                }
+            }
+            if(res.get(Color.Bule) > Alpha){
+                this.color = Color.Bule;
+            }else if(res.get(Color.Red)>Alpha){
+                this.color = Color.Red;
+            }
+
+            if (Round == ROUND){
+                this.finalColor = this.color;
+                return;
+            }
 
         }
+
+        Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
+        Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
 
     }
 
