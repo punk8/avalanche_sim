@@ -31,6 +31,9 @@ public class Node {
     public int count;// 记录当前接收到多少个响应了
     public Color finalColor;
 
+    public long startTime;
+    public long finalTime;
+
     //map存放对应id节点发送的color
     public Map<Integer,Color> receiveMap = new HashMap<Integer, Color>();
 
@@ -45,6 +48,7 @@ public class Node {
         this.color = Color.None;
         this.count = 0;
         this.Round = 0;
+        this.startTime = 0;
     }
 
 //    public Node(int id,Config config){
@@ -80,21 +84,29 @@ public class Node {
         Color recvColor = requestMessage.color;
         long recTime = msg.rcvtime + netDlys[msg.sendID];
         if(this.color == Color.None){
-            this.color = color;
+            this.startTime = recTime;
+            this.color = recvColor;
             Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
             Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
         }
+//        Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
+//        Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
         Message replyMessage = new ReplyMessage(this.id,msg.sendID,this.color,recTime);
         Network.sendMsg(replyMessage,sendTag);
     }
 
     public void receiveReply(Message msg){
+//        System.out.println("current round = "+Round);
+
         if(msg == null)return;
         ReplyMessage replyMessage = (ReplyMessage)msg;
-        long recTime = msg.rcvtime + netDlys[msg.sendID];
+        long recTime = replyMessage.rcvtime + netDlys[msg.sendID];
         this.count ++;
-        receiveMap.put(msg.sendID,msg.color);
-        if(this.count == K){
+        receiveMap.put(replyMessage.sendID,replyMessage.color);
+//        System.out.println("current count"+count);
+        if(this.count == K-1){
+            this.count = 0;
+//            System.out.println("current count");
             Round ++;
             Map<Color, Integer> res=new HashMap<>();
             for (Map.Entry<Integer,Color> entry:receiveMap.entrySet()){
@@ -109,17 +121,23 @@ public class Node {
             }else if(res.get(Color.Red)>Alpha){
                 this.color = Color.Red;
             }
-
+//            System.out.println("current round = "+Round);
             if (Round == ROUND){
+
                 this.finalColor = this.color;
+                this.finalTime = recTime;
                 return;
+            }else {//开启下一轮
+                //如果进入了下一轮
+                Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
+                Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
+
             }
 
+        }else {
+//            Network.sendWait();
+            return;
         }
-
-        Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
-        Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
-
     }
 
 

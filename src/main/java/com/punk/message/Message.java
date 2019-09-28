@@ -5,9 +5,9 @@ import com.punk.node.Color;
 import java.util.Comparator;
 
 public class Message {
-    public static final int REQUEST = 1;
+    public static final int REQUEST = 0;
 
-    public static final int REPLY = 2;
+    public static final int REPLY = 1;
 
     public Color color;
 
@@ -67,8 +67,8 @@ public class Message {
 
     public String toString() {
         String[] typeName = {"Request","Reply"};
-        return "消息类型:"+typeName[type]+";发送者id:"
-                +sendID+";接收者id:"+receiveID+";消息接收时间戳:"+rcvtime+";";
+        return "消息类型:"+typeName[this.type]+";发送者id:"
+                +sendID+";发送颜色:"+this.color+";接收者id:"+receiveID+";消息接收时间戳:"+rcvtime+";";
     }
     public Message copy(int rcvId, long rcvtime,int type) {
         if(type == REPLY){

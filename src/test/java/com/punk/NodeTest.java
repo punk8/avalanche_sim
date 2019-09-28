@@ -19,11 +19,14 @@ public class NodeTest {
         }
 
         nodes[0].color = Color.Bule;
+
 //        for(int i = 0; i < N; i++) {
 //            System.out.println(nodes[i]);
 //        }
 
-        Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, System.currentTimeMillis());
+        long startTime = System.currentTimeMillis();
+        Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, startTime);
+        nodes[0].startTime = startTime;
         System.out.println(message.type);
         Network.sendMsgToKOthers(message,nodes[0].id,"send");
         while (!msgQue.isEmpty()){
@@ -32,10 +35,34 @@ public class NodeTest {
                 case Message.REPLY:
                 case Message.REQUEST:
                     nodes[msg.receiveID].msgProcess(msg);
+//                    System.out.println("msgprocess");
+                    break;
+                case 2:
                     break;
             }
-
-
         }
+
+        long totaltime = 0;
+        long consensusColor = 0;
+        long noColor = 0;
+        long roundCount = 0;
+        for(int i=0;i<N;i++){
+//            System.out.println(nodes[i].finalTime- nodes[i].startTime);
+//            System.out.println(nodes[i].finalColor);
+            if(nodes[i].finalColor == Color.Bule){
+                consensusColor ++;
+            }else if(nodes[i].finalColor == null){
+                noColor ++;
+            }
+
+            if(nodes[i].Round == ROUND){
+                roundCount ++;
+            }
+        }
+
+        System.out.println("average time = "+totaltime+" consens color = "+consensusColor+" no color = "+noColor);
+        System.out.println(roundCount);
+        System.out.println(msgQue.isEmpty());
+
     }
 }
