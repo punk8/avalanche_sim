@@ -1,5 +1,6 @@
 package com.punk;
 
+import com.punk.Constants.Constants;
 import com.punk.message.Message;
 import com.punk.message.RequestMessage;
 import com.punk.network.Network;
@@ -13,8 +14,8 @@ import static com.punk.network.Network.*;
 public class NodeTest {
 
     public static void main(String[] args){
-        Node[] nodes = new Node[N];
-        for(int i = 0; i < N; i++) {
+        Node[] nodes = new Node[Constants.N];
+        for(int i = 0; i < Constants.N; i++) {
             nodes[i] = new Node(i, netDlys[i], netDlysToClis[i]);
         }
 
@@ -31,22 +32,25 @@ public class NodeTest {
         Network.sendMsgToKOthers(message,nodes[0].id,"send");
         while (!msgQue.isEmpty()){
             Message msg = msgQue.poll();
-            switch(msg.type){
-                case Message.REPLY:
-                case Message.REQUEST:
-                    nodes[msg.receiveID].msgProcess(msg);
-//                    System.out.println("msgprocess");
-                    break;
-                case 2:
-                    break;
-            }
+//            switch(msg.type){
+//                case Message.REPLY:
+//                case Message.REQUEST:
+//                    nodes[msg.receiveID].msgProcess(msg);
+////                    System.out.println("msgprocess");
+//                    break;
+//                case 2:
+//                    break;
+//            }
+
+
+            nodes[msg.receiveID].msgProcess(msg);
         }
 
         long totaltime = 0;
         long consensusColor = 0;
         long noColor = 0;
         long roundCount = 0;
-        for(int i=0;i<N;i++){
+        for(int i=0;i<Constants.N;i++){
 //            System.out.println(nodes[i].finalTime- nodes[i].startTime);
 //            System.out.println(nodes[i].finalColor);
             if(nodes[i].finalColor == Color.Bule){
@@ -55,7 +59,7 @@ public class NodeTest {
                 noColor ++;
             }
 
-            if(nodes[i].Round == ROUND){
+            if(nodes[i].Round == 1){
                 roundCount ++;
             }
         }

@@ -2,6 +2,7 @@ package com.punk.network;
 
 
 import com.punk.Client;
+import com.punk.Constants.Constants;
 import com.punk.Utils;
 import com.punk.message.Message;
 import com.punk.node.Color;
@@ -10,21 +11,16 @@ import com.punk.node.Node;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Network {
 
-    public static int N = 1000; //总共节点数
-    public static int K = 10; // 抽样节点数
-    public static int Alpha = 6; //同种颜色的个数超过alpha则设置颜色为该颜色
-    public static int ROUND = 1;
 
-    public static final int BASEDLYBTWRP = 2000;				//节点之间的基础网络时延2s
-    public static final int DLYRNGBTWRP = 3000;				//节点间的网络时延扰动范围3s
-    public static final int BASEDLYBTWRPANDCLI = 10;		//节点与客户端之间的基础网络时延
-    public static final int DLYRNGBTWRPANDCLI = 15;			//节点与客户端之间的网络时延扰动范围
 
     //消息优先队列（按消息计划被处理的时间戳排序）
     public static Queue<Message> msgQue = new PriorityQueue<>(Message.cmp);
+//    public static Queue<Message> msgQue = new LinkedBlockingQueue<Message>();
+
 
     //正在网络中传播的消息的总大小
     public static long inFlyMsgLen = 0;
@@ -32,9 +28,9 @@ public class Network {
 
 
     //初始化节点间的网络延时以及客户端与节点的网络延时
-    public static int[][] netDlys = netDlyBtwRpInit(N);
+    public static int[][] netDlys = netDlyBtwRpInit(Constants.N);
 
-    public static int[][] netDlysToClis = netDlyBtwRpAndCliInit(N, 1);
+    public static int[][] netDlysToClis = netDlyBtwRpAndCliInit(Constants.N, 1);
 
     public static int[][] netDlysToNodes = Utils.flipMatrix(netDlysToClis);
 
@@ -49,7 +45,7 @@ public class Network {
         for(int i = 0; i < n; ++i)
             for(int j = 0; j < n; ++j)
                 if(i < j && ltcs[i][j] == 0) {
-                    ltcs[i][j] = BASEDLYBTWRP + rand.nextInt(DLYRNGBTWRP);
+                    ltcs[i][j] = Constants.BASEDLYBTWRP + rand.nextInt(Constants.DLYRNGBTWRP);
                     ltcs[j][i] = ltcs[i][j];
                 }
         return ltcs;
@@ -66,7 +62,7 @@ public class Network {
         Random rand = new Random(666);
         for(int i = 0; i < n; i++)
             for(int j = 0; j < m; j++)
-                ltcs[i][j] = BASEDLYBTWRPANDCLI + rand.nextInt(DLYRNGBTWRPANDCLI);
+                ltcs[i][j] = Constants.BASEDLYBTWRPANDCLI + rand.nextInt(Constants.DLYRNGBTWRPANDCLI);
         return ltcs;
     }
 
@@ -74,8 +70,8 @@ public class Network {
     public static void main(String[] args) {
         //初始化包含FN个拜占庭意节点的RN个replicas
 //		boolean[] byzts = byztDistriInit(RN, FN);
-        Node[] nodes = new Node[N];
-        for(int i = 0; i < N; i++) {
+        Node[] nodes = new Node[Constants.N];
+        for(int i = 0; i < Constants.N; i++) {
             nodes[i] = new Node(i, netDlys[i], netDlysToClis[i]);
 
         }
@@ -139,9 +135,9 @@ public class Network {
     }
 
     public static void sendMsgToKOthers(Message msg, int id, String tag) {
-        for(int i = 0; i < K; i++) {
+        for(int i = 0; i < Constants.K; i++) {
             Random r = new Random();
-            int toID = r.nextInt(N);
+            int toID = r.nextInt(Constants.N);
             if(toID != id) {
                 Message m = msg.copy(toID, msg.rcvtime + netDlys[id][i],msg.type);
                 sendMsg(m, tag);

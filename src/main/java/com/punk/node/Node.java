@@ -1,5 +1,6 @@
 package com.punk.node;
 
+import com.punk.Constants.Constants;
 import com.punk.algorim.Config;
 import com.punk.message.Message;
 import com.punk.message.ReplyMessage;
@@ -104,7 +105,7 @@ public class Node {
         this.count ++;
         receiveMap.put(replyMessage.sendID,replyMessage.color);
 //        System.out.println("current count"+count);
-        if(this.count == K){
+        if(this.count == Constants.K){
             this.count = 0;
 //            System.out.println("current count");
             Round ++;
@@ -116,13 +117,13 @@ public class Node {
                     res.put(entry.getValue(),1);
                 }
             }
-            if(res.get(Color.Bule) > Alpha){
+            if(res.get(Color.Bule) > Constants.Alpha){
                 this.color = Color.Bule;
-            }else if(res.get(Color.Red)>Alpha){
+            }else if(res.get(Color.Red)>Constants.Alpha){
                 this.color = Color.Red;
             }
 //            System.out.println("current round = "+Round);
-            if (Round == ROUND){
+            if (Round == Constants.ROUND){
 
                 this.finalColor = this.color;
                 this.finalTime = recTime;
