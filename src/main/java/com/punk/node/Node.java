@@ -104,7 +104,7 @@ public class Node {
         this.count ++;
         receiveMap.put(replyMessage.sendID,replyMessage.color);
 //        System.out.println("current count"+count);
-        if(this.count == K-1){
+        if(this.count == K){
             this.count = 0;
 //            System.out.println("current count");
             Round ++;
