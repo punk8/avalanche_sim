@@ -29,6 +29,8 @@ public class NodeTest {
         Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, startTime);
         nodes[0].startTime = startTime;
         System.out.println(message.type);
+//        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
+        Network.sendMsgToKOthers(message,nodes[0].id,"send");
         Network.sendMsgToKOthers(message,nodes[0].id,"send");
         while (!msgQue.isEmpty()){
             Message msg = msgQue.poll();

@@ -9,6 +9,7 @@ import com.punk.message.RequestMessage;
 import com.punk.node.Color;
 import com.punk.node.Node;
 
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
@@ -146,6 +147,11 @@ public class Network {
                 sendMsg(m, tag);
             }
         }
+//        for(int i =0 ;i<sendTo.size();i++){
+//            Message m = msg.copy(sendTo.get(i), msg.rcvtime + netDlys[id][i],msg.type);
+////                m = (RequestMessage)m;
+//            sendMsg(m, tag);
+//        }
     }
 
     public static void sendWait(){

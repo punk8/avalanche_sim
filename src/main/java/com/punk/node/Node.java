@@ -40,6 +40,8 @@ public class Node {
 
     public int Round;
 
+    public List<Integer> alreadySendList;
+
 
 
     public Node(int id,int[] netDlys,int[] netDlyToClis){
@@ -50,6 +52,7 @@ public class Node {
         this.count = 0;
         this.Round = 0;
         this.startTime = 0;
+        this.alreadySendList = new ArrayList<Integer>();
     }
 
 //    public Node(int id,Config config){
@@ -88,6 +91,8 @@ public class Node {
             this.startTime = recTime;
             this.color = recvColor;
             Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
+//            List<Integer> sendTo = findSendTo();
+//            Network.sendMsgToKOthers(queryMessage,this.id,sendTag,sendTo);
             Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
         }
 //        Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
@@ -134,6 +139,8 @@ public class Node {
             }else {//开启下一轮
                 //如果进入了下一轮
                 Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
+//                List<Integer> sendTo = findSendTo();
+//                Network.sendMsgToKOthers(queryMessage,this.id,sendTag,sendTo);
                 Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
 
             }
@@ -142,6 +149,20 @@ public class Node {
 //            Network.sendWait();
             return;
         }
+    }
+
+    public List<Integer> findSendTo(){
+        List<Integer> sendTo = new ArrayList<>();
+        for(int i = 0; i < Constants.K; i++) {
+            int toID = r.nextInt(Constants.N);
+            if(toID != id) {
+                if(!alreadySendList.contains(toID)){
+                    sendTo.add(toID);
+                    alreadySendList.add(toID);
+                }
+            }
+        }
+        return sendTo;
     }
 
 
