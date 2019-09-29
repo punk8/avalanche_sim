@@ -45,6 +45,9 @@ public class Node {
 
     public List<Integer> alreadySendList;
 
+//    //最新的回复
+//    public long lastReply;
+
 
 
     public Node(int id,int[] netDlys,int[] netDlyToClis){
@@ -72,6 +75,7 @@ public class Node {
 
     public void msgProcess(Message msg){
         if(this.type == Constants.OFFLINE){
+            System.out.println("["+this.id+"]"+" lost connection..");
             return;
         }
         msg.print(this.id+" process:"+receiveTag);
@@ -115,6 +119,7 @@ public class Node {
         if(msg == null)return;
         ReplyMessage replyMessage = (ReplyMessage)msg;
         long recTime = replyMessage.rcvtime + netDlys[msg.sendID];
+//        lastReply = recTime;
         this.count ++;
         receiveMap.put(replyMessage.sendID,replyMessage.color);
         if(this.count == Constants.K){
@@ -152,6 +157,7 @@ public class Node {
             receiveMap.clear();
 
         }else {
+//            System.currentTimeMillis()>=this.timer+
 //            Network.sendWait();
             return;
         }

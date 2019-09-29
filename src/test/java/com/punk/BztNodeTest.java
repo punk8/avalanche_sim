@@ -9,44 +9,49 @@ import com.punk.node.Color;
 import com.punk.node.Node;
 import com.punk.node.UpgradeNode;
 
-import java.sql.Time;
+import java.util.Random;
+import java.util.RandomAccess;
 
 import static com.punk.network.Network.*;
+import static com.punk.network.Network.msgQue;
 
-public class NodeTest {
-
+public class BztNodeTest {
     public static void main(String[] args){
+
+
+
         long totaltime = 0;
         long BlueColor = 0;
         long RedColor = 0;
         long noColor = 0;
 
-
         Node[] nodes = new Node[Constants.N];
         for(int i = 0; i < Constants.N; i++) {
-//            nodes[i] = new Node(i, netDlys[i], netDlysToClis[i]);
-            if(2<i&&i<203){
+            if(2<i&&i<303){
                 nodes[i] = new ByztNode(i,netDlys[i],netDlysToClis[i]);
             }else {
 
-                nodes[i] = new Node(i, netDlys[i], netDlysToClis[i]);
+                nodes[i] = new UpgradeNode(i, netDlys[i], netDlysToClis[i]);
 
             }
+//            nodes[i] = new UpgradeNode(i, netDlys[i], netDlysToClis[i]);
+//            for(int j = 0;j<Constants.M;j++){
+//
+//                nodes[j+12] = new ByztNode(i,netDlys[i],netDlysToClis[i]);
+//            }
         }
 
 
         long startTime = System.currentTimeMillis();
 
-//        for(int i = 0;i<1;i++){
-//            nodes[i+13].type = Constants.OFFLINE;
-//        }
+
 
 
 //        nodes[0].color = Color.Red;
 //        Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, startTime);
 //        nodes[0].startTime = startTime;
 //        System.out.println(message.type);
-//        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
+//        Network.sendMsgToKOthers(message,nodes[0].id,"send");
 
 
 //        nodes[1].color = Color.Blue;
@@ -96,7 +101,7 @@ outterLoop:
                 }else {
                     noColor ++;
                 }
-                if((BlueColor<=200&&RedColor>=800)  || (RedColor<=200&&BlueColor>=800)){
+                if((BlueColor<=300&&RedColor>=700)  || (RedColor<=300&&BlueColor>=700)){
                     break outterLoop;
                 }
             }
@@ -109,7 +114,7 @@ outterLoop:
         BlueColor = 0;
         RedColor = 0;
         noColor = 0;
-        long roundCount = 0;
+//        roundCount = 0;
         for(int i=0;i<Constants.N;i++){
 
             if(nodes[i].finalColor == Color.Blue){
