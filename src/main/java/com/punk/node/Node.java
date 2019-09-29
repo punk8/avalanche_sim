@@ -14,6 +14,8 @@ import static com.punk.network.Network.*;
 
 public class Node {
 
+    public int type;
+
     public Color color; //表示节点颜色
 
     public Config config;
@@ -46,6 +48,7 @@ public class Node {
 
 
     public Node(int id,int[] netDlys,int[] netDlyToClis){
+        this.type = Constants.NORMAL;
         this.id = id;
         this.netDlys = netDlys;
         this.netDlyToClis = netDlyToClis;
@@ -68,6 +71,9 @@ public class Node {
     }
 
     public void msgProcess(Message msg){
+        if(this.type == Constants.OFFLINE){
+            return;
+        }
         msg.print(this.id+" process:"+receiveTag);
         switch (msg.type){
             case Message.REQUEST:

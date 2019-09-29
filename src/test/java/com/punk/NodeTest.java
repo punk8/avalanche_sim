@@ -22,6 +22,10 @@ public class NodeTest {
 
         long startTime = System.currentTimeMillis();
 
+        for(int i = 0;i<10;i++){
+            nodes[i+13].type = Constants.OFFLINE;
+        }
+
 
         nodes[0].color = Color.Red;
         Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, startTime);
@@ -46,12 +50,12 @@ public class NodeTest {
 
 
 
-//        nodes[2].color = Color.Red;
-//        Message message2 = new RequestMessage(nodes[2].id,0,nodes[2].color, startTime+400);
-//        nodes[2].startTime = startTime+400;
-//        System.out.println(message2.type);
-////        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
-//        Network.sendMsgToKOthers(message2,nodes[2].id,"send");
+        nodes[2].color = Color.Blue;
+        Message message2 = new RequestMessage(nodes[2].id,0,nodes[2].color, startTime);
+        nodes[2].startTime = startTime;
+        System.out.println(message2.type);
+//        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
+        Network.sendMsgToKOthers(message2,nodes[2].id,"send");
         while (!msgQue.isEmpty()){
             Message msg = msgQue.poll();
 //            switch(msg.type){
@@ -77,8 +81,7 @@ public class NodeTest {
         long noColor = 0;
         long roundCount = 0;
         for(int i=0;i<Constants.N;i++){
-//            System.out.println(nodes[i].finalTime- nodes[i].startTime);
-//            System.out.println(nodes[i].finalColor);
+
             if(nodes[i].finalColor == Color.Blue){
                 BlueColor ++;
             }else if(nodes[i].finalColor == Color.Red){
@@ -92,13 +95,7 @@ public class NodeTest {
         }
 
         System.out.println("average time = "+totaltime/Constants.N+" blue color = "+BlueColor+" Red color = "+RedColor+" no color = "+noColor);
-        //        System.out.println(msgQue.isEmpty());
 
-//        for(int i=0;i<Constants.N;i++){
-//            if(nodes[i].finalColor == Color.Blue){
-//                System.out.println(i);
-//            }
-//        }
 
     }
 }
