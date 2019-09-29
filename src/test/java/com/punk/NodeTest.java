@@ -42,10 +42,13 @@ public class NodeTest {
 //                    break;
 //            }
 
-
+//            if(msgQue.size() <= 100){
+//                System.out.println("1++++0");
+//            }
             nodes[msg.receiveID].msgProcess(msg);
         }
 
+        msgQue.isEmpty();
         long totaltime = 0;
         long consensusColor = 0;
         long noColor = 0;

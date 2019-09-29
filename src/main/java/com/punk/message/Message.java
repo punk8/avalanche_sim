@@ -73,10 +73,11 @@ public class Message {
     public Message copy(int rcvId, long rcvtime,int type) {
         if(type == REPLY){
             return new ReplyMessage(sendID, rcvId,this.color, rcvtime);
-        }else {
+        }else if(type == REQUEST){
 
             return new RequestMessage(sendID, rcvId,this.color, rcvtime);
 
         }
+        throw new Error("type error");
     }
 }

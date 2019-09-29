@@ -63,7 +63,7 @@ public class Node {
     }
 
     public void msgProcess(Message msg){
-        msg.print(receiveTag);
+        msg.print(this.id+" process:"+receiveTag);
         switch (msg.type){
             case Message.REQUEST:
                 receiveRequest(msg);
@@ -117,9 +117,12 @@ public class Node {
                     res.put(entry.getValue(),1);
                 }
             }
-            if(res.get(Color.Bule) > Constants.Alpha){
+//            System.out.println(this.id+":"+res.get(Color.Bule));
+            if(res.get(Color.Bule) >= Constants.Alpha){
+
                 this.color = Color.Bule;
-            }else if(res.get(Color.Red)>Constants.Alpha){
+
+            }else if(res.get(Color.Red)>=Constants.Alpha){
                 this.color = Color.Red;
             }
 //            System.out.println("current round = "+Round);

@@ -5,6 +5,7 @@ import com.punk.Client;
 import com.punk.Constants.Constants;
 import com.punk.Utils;
 import com.punk.message.Message;
+import com.punk.message.RequestMessage;
 import com.punk.node.Color;
 import com.punk.node.Node;
 
@@ -24,6 +25,8 @@ public class Network {
 
     //正在网络中传播的消息的总大小
     public static long inFlyMsgLen = 0;
+
+    public static Random r = new Random(999);
 
 
 
@@ -129,17 +132,17 @@ public class Network {
 
 
     public static void sendMsg(Message msg, String tag) {
-        msg.print(tag);
+        msg.print(msg.sendID+" process:"+tag);
         msgQue.add(msg);
 //        inFlyMsgLen += msg.len;
     }
 
     public static void sendMsgToKOthers(Message msg, int id, String tag) {
         for(int i = 0; i < Constants.K; i++) {
-            Random r = new Random();
             int toID = r.nextInt(Constants.N);
             if(toID != id) {
                 Message m = msg.copy(toID, msg.rcvtime + netDlys[id][i],msg.type);
+//                m = (RequestMessage)m;
                 sendMsg(m, tag);
             }
         }
