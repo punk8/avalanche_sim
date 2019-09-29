@@ -74,35 +74,10 @@ public class NodeTest {
 outterLoop:
         while (!msgQue.isEmpty()){
             Message msg = msgQue.poll();
-//            switch(msg.type){
-//                case Message.REPLY:
-//                case Message.REQUEST:
-//                    nodes[msg.receiveID].msgProcess(msg);
-////                    System.out.println("msgprocess");
-//                    break;
-//                case 2:
-//                    break;
-//            }
-
-//            if(msgQue.size() <= 100){
-//                System.out.println("1++++0");
-//            }
             nodes[msg.receiveID].msgProcess(msg);
-            for(int i=0;i<Constants.N;i++){
-                if(nodes[i].finalColor == Color.Blue){
-                    BlueColor ++;
-                }else if(nodes[i].finalColor == Color.Red){
-                    RedColor ++;
-                }else {
-                    noColor ++;
-                }
-                if((BlueColor<=200&&RedColor>=800)  || (RedColor<=200&&BlueColor>=800)){
-                    break outterLoop;
-                }
+            if(isStable(nodes)){
+                break outterLoop;
             }
-            BlueColor = 0;
-            RedColor = 0;
-            noColor = 0;
         }
 
 //        msgQue.isEmpty();
@@ -126,6 +101,26 @@ outterLoop:
 
         System.out.println("average time = "+totaltime/Constants.N+" blue color = "+BlueColor+" Red color = "+RedColor+" no color = "+noColor);
 
+
+    }
+    public static boolean isStable(Node[] nodes){
+        long BlueColor = 0;
+        long RedColor = 0;
+        long noColor = 0;
+        for(int i=0;i<Constants.N;i++){
+            if(nodes[i].finalColor == Color.Blue){
+                BlueColor ++;
+            }else if(nodes[i].finalColor == Color.Red){
+                RedColor ++;
+            }else {
+                noColor ++;
+            }
+            if(BlueColor>=Constants.ALPHA || RedColor>=Constants.ALPHA){
+                return true;
+
+            }
+        }
+        return false;
 
     }
 }

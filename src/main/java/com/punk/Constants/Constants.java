@@ -3,13 +3,13 @@ package com.punk.Constants;
 public final class Constants {
 
 
-    public static final double ALPHA =  0.5;
+    public static final int ALPHA =  800; //只要全网到达这个数就当作已经全网共识了
     public static final long DEFAULT_K = 10;
 
     public static int N = 1000; //总共节点数
     public static int K = 31; // 抽样节点数
     public static int Alpha = 16; //同种颜色的个数超过alpha则设置颜色为该颜色
-    public static int ROUND = 3;
+    public static int ROUND = 4;
     public static int BETA = 3;
 
 

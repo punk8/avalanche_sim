@@ -27,7 +27,7 @@ public class BztNodeTest {
 
         Node[] nodes = new Node[Constants.N];
         for(int i = 0; i < Constants.N; i++) {
-            if(2<i&&i<303){
+            if(5<i&&i<6+Constants.M){
                 nodes[i] = new ByztNode(i,netDlys[i],netDlysToClis[i]);
             }else {
 
@@ -93,21 +93,24 @@ outterLoop:
 //                System.out.println("1++++0");
 //            }
             nodes[msg.receiveID].msgProcess(msg);
-            for(int i=0;i<Constants.N;i++){
-                if(nodes[i].finalColor == Color.Blue){
-                    BlueColor ++;
-                }else if(nodes[i].finalColor == Color.Red){
-                    RedColor ++;
-                }else {
-                    noColor ++;
-                }
-                if((BlueColor<=300&&RedColor>=700)  || (RedColor<=300&&BlueColor>=700)){
-                    break outterLoop;
-                }
+//            for(int i=0;i<Constants.N;i++){
+//                if(nodes[i].finalColor == Color.Blue){
+//                    BlueColor ++;
+//                }else if(nodes[i].finalColor == Color.Red){
+//                    RedColor ++;
+//                }else {
+//                    noColor ++;
+//                }
+//                if((BlueColor<=300&&RedColor>=700)  || (RedColor<=300&&BlueColor>=700)){
+//                    break outterLoop;
+//                }
+//            }
+//            BlueColor = 0;
+//            RedColor = 0;
+//            noColor = 0;
+            if(isStable(nodes)){
+                break outterLoop;
             }
-            BlueColor = 0;
-            RedColor = 0;
-            noColor = 0;
         }
 
 //        msgQue.isEmpty();
@@ -131,6 +134,27 @@ outterLoop:
 
         System.out.println("average time = "+totaltime/Constants.N+" blue color = "+BlueColor+" Red color = "+RedColor+" no color = "+noColor);
 
+
+    }
+
+    public static boolean isStable(Node[] nodes){
+        long BlueColor = 0;
+        long RedColor = 0;
+        long noColor = 0;
+        for(int i=0;i<Constants.N;i++){
+            if(nodes[i].finalColor == Color.Blue){
+                BlueColor ++;
+            }else if(nodes[i].finalColor == Color.Red){
+                RedColor ++;
+            }else {
+                noColor ++;
+            }
+            if(BlueColor>=Constants.ALPHA || RedColor>=Constants.ALPHA){
+                return true;
+
+            }
+        }
+        return false;
 
     }
 }
