@@ -149,7 +149,7 @@ outterLoop:
             }else {
                 noColor ++;
             }
-            if(BlueColor>=Constants.ALPHA || RedColor>=Constants.ALPHA){
+            if(BlueColor>=(1-Constants.ALPHA)*Constants.N || RedColor>=(1-Constants.ALPHA)*Constants.N){
                 return true;
 
             }
