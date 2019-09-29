@@ -6,6 +6,7 @@ import com.punk.message.Message;
 import com.punk.message.ReplyMessage;
 import com.punk.message.RequestMessage;
 import com.punk.network.Network;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.util.*;
 
@@ -53,6 +54,7 @@ public class Node {
         this.Round = 0;
         this.startTime = 0;
         this.alreadySendList = new ArrayList<Integer>();
+        this.finalColor = Color.None;
     }
 
 //    public Node(int id,Config config){
@@ -109,10 +111,9 @@ public class Node {
         long recTime = replyMessage.rcvtime + netDlys[msg.sendID];
         this.count ++;
         receiveMap.put(replyMessage.sendID,replyMessage.color);
-//        System.out.println("current count"+count);
         if(this.count == Constants.K){
             this.count = 0;
-//            System.out.println("current count");
+
             Round ++;
             Map<Color, Integer> res=new HashMap<>();
             for (Map.Entry<Integer,Color> entry:receiveMap.entrySet()){
@@ -122,21 +123,19 @@ public class Node {
                     res.put(entry.getValue(),1);
                 }
             }
-//            System.out.println(this.id+":"+res.get(Color.Bule));
-            if(res.get(Color.Bule) >= Constants.Alpha){
+            if(res!=null&&res.containsKey(Color.Blue) &&(res.get(Color.Blue) >= Constants.Alpha)){
+                this.color = Color.Blue;
 
-                this.color = Color.Bule;
-
-            }else if(res.get(Color.Red)>=Constants.Alpha){
+            }else if(res!=null&&res.containsKey(Color.Red) &&res.get(Color.Red)>=Constants.Alpha){
                 this.color = Color.Red;
             }
-//            System.out.println("current round = "+Round);
-            if (Round == Constants.ROUND){
+
+            if (Round >= Constants.ROUND){
 
                 this.finalColor = this.color;
                 this.finalTime = recTime;
                 return;
-            }else {//开启下一轮
+            }else {
                 //如果进入了下一轮
                 Message queryMessage = new RequestMessage(this.id,0,this.color,recTime);
 //                List<Integer> sendTo = findSendTo();
@@ -144,6 +143,7 @@ public class Node {
                 Network.sendMsgToKOthers(queryMessage,this.id,sendTag);
 
             }
+            receiveMap.clear();
 
         }else {
 //            Network.sendWait();

@@ -21,13 +21,12 @@ public class Network {
 
     //消息优先队列（按消息计划被处理的时间戳排序）
     public static Queue<Message> msgQue = new PriorityQueue<>(Message.cmp);
-//    public static Queue<Message> msgQue = new LinkedBlockingQueue<Message>();
 
 
-    //正在网络中传播的消息的总大小
-    public static long inFlyMsgLen = 0;
+//    //正在网络中传播的消息的总大小
+//    public static long inFlyMsgLen = 0;
 
-    public static Random r = new Random(999);
+    public static Random r = new Random();
 
 
 
@@ -138,9 +137,11 @@ public class Network {
 //        inFlyMsgLen += msg.len;
     }
 
+    //必须发送K条
     public static void sendMsgToKOthers(Message msg, int id, String tag) {
         for(int i = 0; i < Constants.K; i++) {
             int toID = r.nextInt(Constants.N);
+            toID = checkID(toID,id);
             if(toID != id) {
                 Message m = msg.copy(toID, msg.rcvtime + netDlys[id][i],msg.type);
 //                m = (RequestMessage)m;
@@ -154,11 +155,21 @@ public class Network {
 //        }
     }
 
-    public static void sendWait(){
-        long time = System.currentTimeMillis();
-        Message msg = new Message(0,0, Color.None,time);
-        msg.type = 2;
-        msgQue.add(msg);
+    public static int checkID(int toID,int sendID){
+        if (toID != sendID){
+            return toID;
+        }else {
+            toID = r.nextInt(Constants.N);
+            toID = checkID(toID,sendID);
+            return toID;
+        }
     }
+
+//    public static void sendWait(){
+//        long time = System.currentTimeMillis();
+//        Message msg = new Message(0,0, Color.None,time);
+//        msg.type = 2;
+//        msgQue.add(msg);
+//    }
 
 }

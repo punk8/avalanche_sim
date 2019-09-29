@@ -19,19 +19,39 @@ public class NodeTest {
             nodes[i] = new Node(i, netDlys[i], netDlysToClis[i]);
         }
 
-        nodes[0].color = Color.Bule;
-
-//        for(int i = 0; i < N; i++) {
-//            System.out.println(nodes[i]);
-//        }
 
         long startTime = System.currentTimeMillis();
+
+
+        nodes[0].color = Color.Red;
         Message message = new RequestMessage(nodes[0].id,0,nodes[0].color, startTime);
         nodes[0].startTime = startTime;
-        System.out.println(message.type);
+//        System.out.println(message.type);
 //        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
+
+
+//        nodes[1].color = Color.Blue;
+//        Message message1 = new RequestMessage(nodes[1].id,0,nodes[1].color, startTime);
+//        nodes[1].startTime = startTime;
+////        System.out.println(message1.type);
+//        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
+
+
+//        Network.sendMsgToKOthers(message1,nodes[1].id,"send");
+
+
         Network.sendMsgToKOthers(message,nodes[0].id,"send");
-        Network.sendMsgToKOthers(message,nodes[0].id,"send");
+//        Network.sendMsgToKOthers(message,nodes[0].id,"send");
+
+
+
+
+//        nodes[2].color = Color.Red;
+//        Message message2 = new RequestMessage(nodes[2].id,0,nodes[2].color, startTime+400);
+//        nodes[2].startTime = startTime+400;
+//        System.out.println(message2.type);
+////        Network.sendMsgToKOthers(message,nodes[0].id,"send",nodes[0].findSendTo());
+//        Network.sendMsgToKOthers(message2,nodes[2].id,"send");
         while (!msgQue.isEmpty()){
             Message msg = msgQue.poll();
 //            switch(msg.type){
@@ -50,28 +70,35 @@ public class NodeTest {
             nodes[msg.receiveID].msgProcess(msg);
         }
 
-        msgQue.isEmpty();
+//        msgQue.isEmpty();
         long totaltime = 0;
-        long consensusColor = 0;
+        long BlueColor = 0;
+        long RedColor = 0;
         long noColor = 0;
         long roundCount = 0;
         for(int i=0;i<Constants.N;i++){
 //            System.out.println(nodes[i].finalTime- nodes[i].startTime);
 //            System.out.println(nodes[i].finalColor);
-            if(nodes[i].finalColor == Color.Bule){
-                consensusColor ++;
-            }else if(nodes[i].finalColor == null){
+            if(nodes[i].finalColor == Color.Blue){
+                BlueColor ++;
+            }else if(nodes[i].finalColor == Color.Red){
+                RedColor ++;
+            }else {
                 noColor ++;
             }
 
-            if(nodes[i].Round == 1){
-                roundCount ++;
-            }
+            totaltime += (nodes[i].finalTime-nodes[i].startTime);
+
         }
 
-        System.out.println("average time = "+totaltime+" consens color = "+consensusColor+" no color = "+noColor);
-        System.out.println(roundCount);
-        System.out.println(msgQue.isEmpty());
+        System.out.println("average time = "+totaltime/Constants.N+" blue color = "+BlueColor+" Red color = "+RedColor+" no color = "+noColor);
+        //        System.out.println(msgQue.isEmpty());
+
+//        for(int i=0;i<Constants.N;i++){
+//            if(nodes[i].finalColor == Color.Blue){
+//                System.out.println(i);
+//            }
+//        }
 
     }
 }

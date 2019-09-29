@@ -3,6 +3,6 @@ package com.punk.node;
 public enum  Color {
 
     None,
-    Bule,
+    Blue,
     Red;
 }
